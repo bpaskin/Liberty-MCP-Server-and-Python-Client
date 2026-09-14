@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ibm.example.mcp</groupId>
@@ -10,26 +10,24 @@
     <packaging>war</packaging>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <wlp-dir-path>/Applications/IBM/wlp</wlp-dir-path>
-        <mcp-jar-version>1.0.106</mcp-jar-version>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
     </properties>
 
     <dependencies>
+
         <dependency>
-            <groupId>io.openliberty.mcp</groupId>
-            <artifactId>mcp-core</artifactId>
-            <version>${mcp-jar-version}</version>
-            <scope>system</scope>
-            <systemPath>${wlp-dir-path}/lib/io.openliberty.mcp_${mcp-jar-version}.jar</systemPath>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>11.0.0</version>
         </dependency>
 
         <dependency>
-  			<groupId>jakarta.platform</groupId>
-  			<artifactId>jakarta.jakartaee-api</artifactId>
-  			<version>10.0.0</version>
-  		</dependency>
+            <groupId>org.mcpjava</groupId>
+            <artifactId>mcp-server-api</artifactId>
+            <version>1.0.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -37,21 +35,18 @@
             <plugin>
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
-                <version>3.11.5</version>
-                <configuration>
-                    <installDirectory>${wlp-dir-path}</installDirectory>
-                </configuration>
+                <version>3.12.3</version>
             </plugin>
 
             <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>3.4.0</version>
-				<configuration>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-					<packagingExcludes>pom.xml</packagingExcludes>
-				</configuration>
-			</plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <packagingExcludes>pom.xml</packagingExcludes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

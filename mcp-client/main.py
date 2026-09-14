@@ -4,7 +4,37 @@ import requests
 MCP_SERVER_URL = "http://localhost:9080/mcp-server/mcp"  
 REST_SERVER_URL = "http://localhost:9080/mcp-server/services/generateRandomNumber"  
 
-def list_tools():
+def initialize():
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 0,
+        "method": "initialize",
+        "params": {
+            "protocolVersion": "2024-11-05",
+            "capabilities": {},
+            "clientInfo": {
+                "name": "python-mcp-client",
+                "version": "1.0.0"
+            }
+        }
+    }
+
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    print("→ Initializing MCP session...")
+    response = requests.post(MCP_SERVER_URL, headers=headers, data=json.dumps(payload))
+
+    if response.status_code != 200:
+        print(f"HTTP error {response.status_code}: {response.text}")
+        return None
+
+    session_id = response.headers.get("Mcp-Session-Id")
+    print(f"← Session established: {session_id}\n")
+    return session_id
+
+def list_tools(session_id):
     # Build JSON-RPC 2.0 request
     payload = {
         "jsonrpc": "2.0",
@@ -13,7 +43,8 @@ def list_tools():
     }
 
     headers = {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Mcp-Session-Id": session_id
     }
 
     print("→ Sending request to MCP server...")
@@ -39,13 +70,13 @@ def list_tools():
     else:
         print("\nNo tools found or unexpected response structure.")
 
-def getRandomNumber():
+def getRandomNumber(session_id):
     payload = {
         "jsonrpc": "2.0",
         "id": 1,
         "method": "tools/call",
         "params": {
-            "name": "Random Number Generator",
+            "name": "RandomNumberGenerator",
             "arguments": {
                 "minNumber": 10,
                 "maxNumber": 75
@@ -54,7 +85,8 @@ def getRandomNumber():
     }
 
     headers = {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Mcp-Session-Id": session_id
     }
 
     print("..................................")
@@ -104,6 +136,8 @@ def getRandomNumberREST():
     print(json.dumps(data, indent=2))
 
 if __name__ == "__main__":
-    list_tools()
-    getRandomNumber()
+    session_id = initialize()
+    if session_id:
+        list_tools(session_id)
+        getRandomNumber(session_id)
     getRandomNumberREST()
